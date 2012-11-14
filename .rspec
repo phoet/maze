@@ -1,0 +1,4 @@
+--pattern spec/**/*_spec.rb
+--color
+--format documentation
+--require maze
