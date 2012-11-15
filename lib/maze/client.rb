@@ -2,20 +2,26 @@ require 'socket'
 
 module Maze
   class Client
-    attr_reader :id
+    attr_reader :id, :events
 
     def initialize id
       @id = id
+      @events = []
     end
 
     def communicate
+      puts "starting communication for #{id}"
+
       TCPSocket.open HOST, USER_CLIENT_PORT do |socket|
         # say hello
         socket.print "#{id}\n"
 
+        yield if block_given?
 
         while payload = socket.readline.chomp
-          puts "received payload: #{payload}"
+          puts "received event payload: #{payload}"
+          events << Event.from_payload(payload)
+          sleep(0.1)
         end
       end
     end
@@ -32,7 +38,7 @@ module Maze
     def emit_events
       TCPSocket.open HOST, EVENT_SOURCE_PORT do |socket|
         count.times do |i|
-          socket.print "#{i}|F|60|50\n"
+          socket.print "#{i}|F|60|#{i}\n"
           socket.flush
           if delay > 0
             sleep(delay)

@@ -36,6 +36,7 @@ module Maze
     def notify(payload)
       event = Event.from_payload payload
       users.each do |user, channel|
+        log "notify #{user} with #{payload}"
         if event.notify_user? user
           channel.push event
         end
@@ -56,11 +57,12 @@ module Maze
     end
 
     def serve io
-      user_id = io.readline.chomp
-      server.log "received user with ID: #{user_id}"
-      server.users[user_id] = Channel.new io
+      user = io.readline.chomp
+      server.log "received user with ID: #{user}"
+      server.users[user] = Channel.new io
+
       until io.closed?
-        server.log 'user loop'
+        server.log "managing user #{user}"
         sleep(0.1)
       end
     end
@@ -78,6 +80,7 @@ module Maze
       while payload = io.readline.chomp
         server.log "received payload: #{payload}"
         server.queue << payload
+        server.notify payload
       end
     end
   end
