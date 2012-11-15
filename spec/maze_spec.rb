@@ -12,7 +12,7 @@ describe Maze do
 
     it "emits events through the client and they are queued on the server" do
       Maze::Server.queue.should have(0).elements
-      Maze::Client.emit_events({ count: 3, delay: 0 })
+      Maze::EventSource.new({ count: 3, delay: 0 }).emit_events
       sleep(1)
       Maze::Server.queue.should have(3).elements
     end
