@@ -33,6 +33,15 @@ module Maze
       end
     end
 
+    def notify(payload)
+      event = Event.from_payload payload
+      users.each do |user, channel|
+        if event.notify_user? user
+          channel.push event
+        end
+      end
+    end
+
     def log message
       puts message if options[:verbose]
     end
@@ -49,7 +58,7 @@ module Maze
     def serve io
       user_id = io.readline.chomp
       server.log "received user with ID: #{user_id}"
-      server.users[user_id] = io
+      server.users[user_id] = Channel.new io
     end
   end
 
@@ -66,6 +75,19 @@ module Maze
         server.log "received payload: #{payload}"
         server.queue << payload
       end
+    end
+  end
+
+  class Channel
+    attr_reader :io
+
+    def initialize io
+      @io = io
+    end
+
+    def push message
+      io.print "#{message}\n"
+      io.flush
     end
   end
 end
