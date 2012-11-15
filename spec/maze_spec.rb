@@ -2,10 +2,7 @@ require 'spec_helper'
 
 describe Maze do
   context "running client and server" do
-    let(:now) { "2012-11-15 09:41:11 +0100" }
-
     before do
-      Maze::Server.any_instance.stub(:now) { now }
       Maze::Server.start
     end
 
@@ -13,8 +10,11 @@ describe Maze do
       Maze::Server.stop
     end
 
-    it "connecting through a TCPSocket to the Server to get the current Time" do
-      Maze::Client.time.should == now
+    it "emits events through the client and they are queued on the server" do
+      Maze::Server.queue.should have(0).elements
+      Maze::Client.emit_events({ count: 3, delay: 0 })
+      sleep(1)
+      Maze::Server.queue.should have(3).elements
     end
   end
 end

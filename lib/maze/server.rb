@@ -2,21 +2,33 @@ require 'gserver'
 
 module Maze
   class Server < GServer
-    def initialize
+    attr_reader :options
+
+    def initialize options
       super EVENT_SOURCE_PORT
+      self.audit = !!options[:verbose]
+      @options = options
     end
 
     def serve io
-      io.puts now
+      while payload = io.readline
+        log "received payload: #{payload}"
+        self.class.queue << payload
+      end
     end
 
-    def now
-      Time.now.to_s
+    def log message
+      puts message if options[:verbose]
+    end
+
+    def self.queue
+      @@_queue ||= []
     end
 
     def self.start options = { verbose: false }
-      @server = Server.new
-      @server.audit = !!options[:verbose]
+      @server.stop if @server
+
+      @server = Server.new options
       @server.start
     end
 
@@ -25,7 +37,7 @@ module Maze
     end
 
     def self.stop
-      @server.shutdown
+      @server.shutdown if running?
     end
   end
 end
