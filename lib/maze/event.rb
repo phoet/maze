@@ -8,6 +8,10 @@ module Maze
       @timestamp, @type, @from, @to = args
     end
 
+    def notify_user? user
+      !to.nil? && user == to
+    end
+
     def self.inherited clazz
       event_classes << clazz
       super
@@ -25,7 +29,12 @@ module Maze
     end
   end
 
-  class Broadcast < Event; end
+  class Broadcast < Event
+    def notify_user? user
+      true
+    end
+  end
+
   class Follow < Event; end
   class Unfollow < Event; end
   class PrivateMsg < Event; end
