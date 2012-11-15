@@ -6,6 +6,10 @@ describe Maze do
     let(:server) { Maze::Server.new }
     let(:users) { 3.times.map { |id| Maze::Client.new(id) } }
 
+    before(:all) do
+      server.setup
+    end
+
     before do
       server.start
     end

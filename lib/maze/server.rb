@@ -4,28 +4,33 @@ module Maze
   class Server
     attr_accessor :queue, :users
     attr_reader :options
-    attr_reader :event_endpoint, :user_endpoint
+    attr_reader :endpoints
 
     def initialize options = { verbose: false }
-      @options = options
-      @queue   = []
-      @users   = {}
+      @options   = options
+      @queue     = []
+      @users     = {}
+      @endpoints = []
+    end
 
-      @event_endpoint = EventEndpoint.new self
-      @event_endpoint.audit = !!options[:verbose]
-
-      @user_endpoint = UserEndpoint.new self
-      @user_endpoint.audit = !!options[:verbose]
+    def setup
+      [EventEndpoint, UserEndpoint].each do |clazz|
+        endpoint = clazz.new self
+        endpoint.audit = !!options[:verbose]
+        endpoints << endpoint
+      end
     end
 
     def start
-      event_endpoint.start
-      user_endpoint.start
+      endpoints.each do |endpoint|
+        endpoint.start if endpoint.stopped?
+      end
     end
 
     def stop
-      event_endpoint.stop
-      user_endpoint.stop
+      endpoints.each do |endpoint|
+        endpoint.stop unless endpoint.stopped?
+      end
     end
 
     def log message
