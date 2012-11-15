@@ -59,7 +59,9 @@ module Maze
           '43|P|32|56'  => PrivateMsg,
           '634|S|32'    => StatusUpdate,
         }.each do |payload, clazz|
-          Event.from_payload(payload).should be_an_instance_of clazz
+          event = Event.from_payload(payload)
+          event.should be_an_instance_of clazz
+          event.to_s.should == payload
         end
       end
 

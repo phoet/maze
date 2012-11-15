@@ -12,6 +12,10 @@ module Maze
       !to.nil? && user == to
     end
 
+    def to_s
+      [timestamp, type, from, to].compact.join PAYLOAD_SEPARATOR
+    end
+
     def self.inherited clazz
       event_classes << clazz
       super
