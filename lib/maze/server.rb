@@ -59,6 +59,10 @@ module Maze
       user_id = io.readline.chomp
       server.log "received user with ID: #{user_id}"
       server.users[user_id] = Channel.new io
+      until io.closed?
+        server.log 'user loop'
+        sleep(0.1)
+      end
     end
   end
 

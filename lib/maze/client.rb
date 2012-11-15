@@ -12,8 +12,11 @@ module Maze
       TCPSocket.open HOST, USER_CLIENT_PORT do |socket|
         # say hello
         socket.print "#{id}\n"
-        socket.flush
-        yield socket if block_given?
+
+
+        while payload = socket.readline.chomp
+          puts "received payload: #{payload}"
+        end
       end
     end
   end
