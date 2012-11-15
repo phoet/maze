@@ -1,6 +1,23 @@
 require 'socket'
 
 module Maze
+  class Client
+    attr_reader :id
+
+    def initialize id
+      @id = id
+    end
+
+    def communicate
+      TCPSocket.open HOST, USER_CLIENT_PORT do |socket|
+        # say hello
+        socket.print "#{id}\n"
+        socket.flush
+        yield socket if block_given?
+      end
+    end
+  end
+
   class EventSource
     attr_reader :count, :delay
 
