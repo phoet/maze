@@ -8,15 +8,12 @@ module Maze
       @messages = []
     end
 
-    def print message
+    def puts message
       messages << message
     end
-
-    def flush; end
   end
 
   describe Server do
-
     let(:channel) { Channel.new FakeIO.new }
     let(:receiving_user) { '1' }
     let(:server) do

@@ -33,68 +33,62 @@ module Maze
       end
     end
 
-    def notify(payload)
+    def notify payload
+      Logger.log "notify with payload #{payload}"
+      queue << payload
+
       event = Event.from_payload payload
       users.each do |user, channel|
-        log "notify #{user} with #{payload}"
+        Logger.log "try notifying #{user} with #{event}"
         if event.notify_user? user
+          Logger.log "notify #{user} with #{event}"
           channel.push event
         end
       end
     end
 
-    def log message
-      puts message if options[:verbose]
-    end
-  end
+    class UserEndpoint < GServer
+      attr_reader :server
 
-  class UserEndpoint < GServer
-    attr_reader :server
+      def initialize server
+        super USER_CLIENT_PORT
+        @server = server
+      end
 
-    def initialize server
-      super USER_CLIENT_PORT
-      @server = server
-    end
+      def log message
+        Logger.log message
+      end
 
-    def serve io
-      user = io.readline.chomp
-      server.log "received user with ID: #{user}"
-      server.users[user] = Channel.new io
+      def serve io
+        user = io.readline.chomp
+        Logger.log "received user with ID: #{user}"
+        server.users[user] = Channel.new io
 
-      until io.closed?
-        server.log "managing user #{user}"
-        sleep(0.1)
+        until io.closed?
+          Logger.log "managing user #{user}"
+          sleep 0.2
+        end
       end
     end
-  end
 
-  class EventEndpoint < GServer
-    attr_reader :server
+    class EventEndpoint < GServer
+      attr_reader :server
 
-    def initialize server
-      super EVENT_SOURCE_PORT
-      @server = server
-    end
-
-    def serve io
-      while payload = io.readline.chomp
-        server.log "received payload: #{payload}"
-        server.queue << payload
-        server.notify payload
+      def initialize server
+        super EVENT_SOURCE_PORT
+        @server = server
       end
-    end
-  end
 
-  class Channel
-    attr_reader :io
+      def log message
+        Logger.log message
+      end
 
-    def initialize io
-      @io = io
-    end
-
-    def push message
-      io.print "#{message}\n"
-      io.flush
+      def serve io
+        while payload = io.readline.chomp
+          Logger.log "received payload: #{payload}"
+          server.notify payload
+        end
+      end
     end
   end
 end
