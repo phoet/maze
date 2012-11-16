@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+
+require_relative '../lib/maze'
+
+server = Maze::Server.new verbose: true
+server.setup
+server.start
+
+sleep(100)

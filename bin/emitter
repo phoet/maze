@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+require_relative '../lib/maze'
+
+source = Maze::EventSource.new count: 100, delay: 0
+source.emit_events

@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+
+require_relative '../lib/maze'
+
+id = ARGV[0]
+raise 'call with id: bin/client ID' unless id
+client = Maze::Client.new id
+client.communicate
