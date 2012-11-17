@@ -3,14 +3,14 @@ require 'gserver'
 module Maze
   class Server
     attr_accessor :queue, :users
-    attr_reader :options
+    attr_reader :options # get rid of this
     attr_reader :endpoints
 
     def initialize options = { verbose: false }
-      @options   = options
-      @queue     = []
-      @users     = {}
-      @endpoints = []
+      @options    = options
+      @queue      = []
+      @users      = {}
+      @endpoints  = []
     end
 
     def setup
@@ -42,9 +42,13 @@ module Maze
         Logger.log "try notifying #{user} with #{event}"
         if event.notify_user? user
           Logger.log "notify #{user} with #{event}"
-          channel.push event
+          channel.send_in_order event
         end
       end
+    rescue
+      puts "*" * 100
+      puts $!
+      puts "*" * 100
     end
 
     class UserEndpoint < GServer

@@ -1,18 +1,6 @@
 require 'spec_helper'
 
 module Maze
-  class FakeIO
-    attr_reader :messages
-
-    def initialize
-      @messages = []
-    end
-
-    def puts message
-      messages << message
-    end
-  end
-
   describe Server do
     let(:channel) { Channel.new FakeIO.new }
     let(:receiving_user) { '1' }

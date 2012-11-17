@@ -12,6 +12,10 @@ module Maze
       !to.nil? && user == to
     end
 
+    def sequence
+      timestamp.to_i
+    end
+
     def to_s
       [timestamp, type, from, to].compact.join PAYLOAD_SEPARATOR
     end

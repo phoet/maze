@@ -1,5 +1,5 @@
 module Maze
-  VERSION = '0.0.7'
+  VERSION = '0.0.8'
 
   DEFAULT_HOST      = 'localhost'
   EVENT_SOURCE_PORT = 9090
