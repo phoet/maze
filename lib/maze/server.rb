@@ -38,6 +38,8 @@ module Maze
       queue << payload
 
       event = Event.from_payload payload
+      event.execute
+
       users.each do |user, channel|
         Logger.log "try notifying #{user} with #{event}"
         if event.notify_user? user

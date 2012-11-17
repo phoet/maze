@@ -18,10 +18,11 @@ module Maze
     context "notification" do
       let(:any_user) { '-1' }
       let(:receiving_user) { '1' }
-      let(:private_message_for_1) { PrivateMsg.new('666', 'P', '2', receiving_user) }
-      let(:follow_for_1) { Follow.new('666', 'F', '2', receiving_user) }
-      let(:unfollow_for_1) { Follow.new('666', 'U', '2', receiving_user) }
-      let(:status_update_of_1) { StatusUpdate.new('666', 'S', receiving_user) }
+      let(:sending_user) { '2' }
+      let(:private_message_for_1) { PrivateMsg.new('666', 'P', sending_user, receiving_user) }
+      let(:follow_for_1) { Follow.new('666', 'F', sending_user, receiving_user) }
+      let(:unfollow_for_1) { Unfollow.new('666', 'U', sending_user, receiving_user) }
+      let(:status_update_of_1) { StatusUpdate.new('666', 'S', sending_user) }
       let(:broadcast) { Broadcast.new('666', 'B') }
 
       it "allows notification for private messages" do
@@ -40,13 +41,31 @@ module Maze
       end
 
       it "denies notification for status updates" do
-        status_update_of_1.notify_user?(receiving_user).should be_false
+        Relation.add sending_user, receiving_user
+        status_update_of_1.notify_user?(receiving_user).should be_true
         status_update_of_1.notify_user?(any_user).should be_false
       end
 
       it "always allows notification for broadcasts" do
         broadcast.notify_user?(receiving_user).should be_true
         broadcast.notify_user?(any_user).should be_true
+      end
+    end
+
+    context "following" do
+
+      let(:any_user) { '1' }
+      let(:follower) { '2' }
+      let(:follow)   { Follow.new '1', 'F', any_user, follower }
+      let(:status)   { StatusUpdate.new '2', 'S', any_user }
+      let(:unfollow) { Unfollow.new '3', 'U', any_user, follower }
+
+      it "executes follow notifications and notifies accordingly" do
+        status.notify_user?(follower).should be_false
+        follow.execute
+        status.notify_user?(follower).should be_true
+        unfollow.execute
+        status.notify_user?(follower).should be_false
       end
     end
 

@@ -12,6 +12,8 @@ module Maze
       !to.nil? && user == to
     end
 
+    def execute; end
+
     def sequence
       timestamp.to_i
     end
@@ -43,8 +45,23 @@ module Maze
     end
   end
 
-  class Follow < Event; end
-  class Unfollow < Event; end
+  class Follow < Event
+    def execute
+      Relation.add from, to
+    end
+  end
+
+  class Unfollow < Event
+    def execute
+      Relation.remove from, to
+    end
+  end
+
+  class StatusUpdate < Event
+    def notify_user? user
+      Relation.subscribers(from).include? user
+    end
+  end
+
   class PrivateMsg < Event; end
-  class StatusUpdate < Event; end
 end
