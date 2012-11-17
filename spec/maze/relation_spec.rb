@@ -2,11 +2,6 @@ require 'spec_helper'
 
 module Maze
   describe Relation do
-
-    before do
-      Relation.clear
-    end
-
     let(:from) { '1' }
     let(:to) { '2' }
 

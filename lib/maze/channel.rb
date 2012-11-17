@@ -1,12 +1,11 @@
 module Maze
   class Channel
     attr_reader :io
-    attr_accessor :queue, :sequence
+    attr_accessor :queue
 
     def initialize io
       @io       = io
       @queue    = []
-      @sequence = nil
     end
 
     def send_in_order event
@@ -14,13 +13,13 @@ module Maze
       self.queue = queue.sort_by { |e| e.sequence }
       if in_order?(event)
         send queue
-        self.sequence = queue.last.sequence
+        self.class.sequence = queue.last.sequence
         queue.clear
       end
     end
 
     def in_order? event
-      sequence.nil? || sequence + 1 == event.sequence
+      self.class.sequence + 1 == event.sequence
     end
 
     def send events
@@ -28,6 +27,14 @@ module Maze
         Logger.log "flushing the queue #{events}"
         io.puts "#{event}"
       end
+    end
+
+    def self.sequence
+      @sequence ||= 0
+    end
+
+    def self.sequence= value
+      @sequence = value
     end
   end
 end

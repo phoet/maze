@@ -16,14 +16,14 @@ module Maze
       end
 
       it "queues on changed order" do
-        channel.sequence = 1
+        Channel.sequence = 1
         channel.send_in_order event_1
         channel.queue.should have(1).elements
         io.messages.should be_empty
       end
 
       it "orders the right way" do
-        channel.sequence = 0
+        Channel.sequence = 0
         channel.send_in_order event_3
         channel.queue.should have(1).elements
         io.messages.should be_empty
@@ -42,12 +42,12 @@ module Maze
       end
 
       it "returns false for an invalid sequence" do
-        channel.sequence = 1
+        Channel.sequence = 1
         channel.in_order?(event_1).should be_false
       end
 
       it "returns true for a valid sequence" do
-        channel.sequence = 1
+        Channel.sequence = 1
         channel.in_order?(event_2).should be_true
       end
     end

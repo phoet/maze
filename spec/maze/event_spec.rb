@@ -53,7 +53,6 @@ module Maze
     end
 
     context "following" do
-
       let(:any_user) { '1' }
       let(:follower) { '2' }
       let(:follow)   { Follow.new '1', 'F', any_user, follower }

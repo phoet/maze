@@ -9,7 +9,7 @@ module Maze
       server.users[receiving_user] = channel
       server
     end
-    let(:event_for_user_1) { "43|P|32|#{receiving_user}" }
+    let(:event_for_user_1) { "1|P|32|#{receiving_user}" }
 
     context "notification" do
       it "notifies a user" do

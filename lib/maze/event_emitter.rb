@@ -10,7 +10,7 @@ module Maze
     def emit_events(type = 'F')
       TCPSocket.open DEFAULT_HOST, EVENT_SOURCE_PORT do |socket|
         count.times do |i|
-          socket.print "#{i}|#{type}|60|#{i}\n"
+          socket.print "#{i + 1}|#{type}|60|#{i}\n"
           socket.flush
           if delay > 0
             sleep(delay)
