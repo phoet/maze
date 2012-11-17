@@ -19,7 +19,6 @@ RSpec.configure do |config|
 
   config.before(:each) do
     # REM: reset global state
-    Maze::Channel.sequence = 0
     Maze::Relation.clear
   end
 end

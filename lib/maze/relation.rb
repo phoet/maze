@@ -1,11 +1,11 @@
 module Maze
   class Relation
     def self.add from, to
-      relationships[from] << to
+      relationships[to] << from
     end
 
     def self.remove from, to
-      relationships[from].delete to
+      relationships[to].delete from
     end
 
     def self.subscribers user

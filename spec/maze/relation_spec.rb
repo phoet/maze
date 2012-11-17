@@ -8,15 +8,15 @@ module Maze
     it "adds subscriptions" do
       Relation.add from, to
       Relation.relationships.should have(1).elements
-      Relation.subscribers(from).should =~ [to]
+      Relation.subscribers(to).should =~ [from]
     end
 
     it "removes subscriptions" do
-      Relation.add from, 'a'
-      Relation.add from, 'b'
-      Relation.subscribers(from).should =~ ['a', 'b']
-      Relation.remove from, 'b'
-      Relation.subscribers(from).should =~ ['a']
+      Relation.add 'a', to
+      Relation.add 'b', to
+      Relation.subscribers(to).should =~ ['a', 'b']
+      Relation.remove 'b', to
+      Relation.subscribers(to).should =~ ['a']
     end
   end
 end

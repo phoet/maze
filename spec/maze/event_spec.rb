@@ -35,13 +35,13 @@ module Maze
         follow_for_1.notify_user?(any_user).should be_false
       end
 
-      it "allows notification for unfollows" do
-        unfollow_for_1.notify_user?(receiving_user).should be_true
-        unfollow_for_1.notify_user?(any_user).should be_false
-      end
+      # it "allows notification for unfollows" do
+      #   unfollow_for_1.notify_user?(receiving_user).should be_true
+      #   unfollow_for_1.notify_user?(any_user).should be_false
+      # end
 
       it "denies notification for status updates" do
-        Relation.add sending_user, receiving_user
+        Relation.add receiving_user, sending_user
         status_update_of_1.notify_user?(receiving_user).should be_true
         status_update_of_1.notify_user?(any_user).should be_false
       end
@@ -50,21 +50,74 @@ module Maze
         broadcast.notify_user?(receiving_user).should be_true
         broadcast.notify_user?(any_user).should be_true
       end
+
+      it "bla" do
+        u = '2'
+        e = Event.from_payload '3|S|1'
+        e.notify_user?(u).should be_false
+      end
     end
 
     context "following" do
       let(:any_user) { '1' }
       let(:follower) { '2' }
       let(:follow)   { Follow.new '1', 'F', any_user, follower }
-      let(:status)   { StatusUpdate.new '2', 'S', any_user }
+      let(:status)   { StatusUpdate.new '2', 'S', follower }
       let(:unfollow) { Unfollow.new '3', 'U', any_user, follower }
 
       it "executes follow notifications and notifies accordingly" do
-        status.notify_user?(follower).should be_false
+        status.notify_user?(any_user).should be_false
         follow.execute
-        status.notify_user?(follower).should be_true
+        status.notify_user?(any_user).should be_true
         unfollow.execute
-        status.notify_user?(follower).should be_false
+        status.notify_user?(any_user).should be_false
+      end
+
+      it "nups" do
+        e = Event.from_payload '5|F|1|2'
+        e.notify_user?('2').should be_true
+      end
+ 
+      it "dups" do
+        # Problem with user 3: Expected:35|B Found:32|U|1|3
+        e = Event.from_payload '32|U|1|3'
+        e.notify_user?('3').should be_false
+      end
+
+      it "does something" do
+        [
+          '1|B',
+          '2|B',
+          '3|S|1',
+          '4|S|1',
+          '5|F|1|2',
+          '6|P|1|2',
+          '7|F|1|3',
+          '8|S|1',
+          '9|F|1|4',
+          '10|B',
+        ].each do |p|
+          e = Event.from_payload p
+          e.execute
+        end
+        Relation.subscribers('1').should == []
+        # 1353162845710 [INFO]  sending event: 1|B
+        # 1353162845713 [INFO]  sending event: 2|B
+        # 1353162845715 [INFO]  sending event: 3|S|1
+        # 1353162845716 [INFO]  sending event: 4|S|1
+        # 1353162845717 [INFO]  sending event: 5|F|1|2
+        # 1353162845718 [INFO]  sending event: 6|P|1|2
+        # 1353162845719 [INFO]  sending event: 7|F|1|3
+        # 1353162845719 [INFO]  sending event: 8|S|1
+        # 1353162845719 [INFO]  sending event: 9|F|1|4
+        # 1353162845720 [INFO]  sending event: 10|B
+
+        # 1353162845722 [INFO] user 2 was notified of 1|B
+        # 1353162845723 [INFO] user 2 was notified of 2|B
+        # 1353162845724 [INFO] user 2 was notified of 5|F|1|2
+        # 1353162845725 [INFO] user 2 was notified of 6|P|1|2
+        # 1353162845727 [INFO] user 2 was notified of 8|S|1
+        # 1353162845727 [ERROR] Problem with user 2: Expected:10|B Found:8|S|1
       end
     end
 

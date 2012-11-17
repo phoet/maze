@@ -2,6 +2,6 @@
 
 SEED=666
 EVENTS=1000
-CONCURRENCY=7
+CONCURRENCY=8
 
 time java -server -XX:-UseConcMarkSweepGC -Xmx2G -jar ./bin/FollowerMaze-assembly-1.0.jar $SEED $EVENTS $CONCURRENCY

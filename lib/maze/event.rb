@@ -52,6 +52,9 @@ module Maze
   end
 
   class Unfollow < Event
+    def notify_user? user
+      false
+    end
     def execute
       Relation.remove from, to
     end
