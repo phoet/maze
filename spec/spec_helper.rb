@@ -33,4 +33,6 @@ class FakeIO
   def puts message
     messages << message
   end
+
+  def flush; end
 end

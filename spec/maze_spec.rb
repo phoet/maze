@@ -27,7 +27,7 @@ describe Maze do
 
       sleep 1
       server.stop
-      server.queue.should have(3).elements
+      server.iterator.sequence.should == 3
     end
 
     it "notifies a connected user" do
@@ -38,7 +38,7 @@ describe Maze do
       end
 
       sleep 1
-      user.should have(2).events
+      user.should have(1).events
     end
   end
 end

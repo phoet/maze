@@ -1,25 +1,18 @@
-require 'gserver'
-require 'thread'
-
 module Maze
   class Server
-    attr_accessor :queue, :users, :sequence
-    attr_reader :options # get rid of this
-    attr_reader :endpoints
+    attr_accessor :queue, :users
+    attr_reader :endpoints, :iterator
 
-    def initialize options = { verbose: false }
-      @options    = options
+    def initialize
       @queue      = []
       @users      = {}
       @endpoints  = []
-      @sequence   = 0
-      @mutex = Mutex.new
+      @iterator   = Iterator.new
     end
 
     def setup
       [UserEndpoint, EventEndpoint].each do |clazz|
         endpoint = clazz.new self
-        endpoint.audit = !!options[:verbose]
         endpoints << endpoint
       end
     end
@@ -37,31 +30,18 @@ module Maze
     end
 
     def notify payload
-      sleep 0.2
-      Logger.log "i am thread #{Thread.current}"
-      e = Event.from_payload payload
-      # @mutex.synchronize do
-        queue << e
-        self.queue = queue.sort_by { |e| e.sequence }
-
-        queue.each do |event|
-          Logger.log "queue is #{queue}"
-          return unless sequence + 1 == e.sequence
-          event.execute
-          users.each do |user, channel|
-            Logger.log "try notifying #{user} with #{event}"
-            if event.notify_user? user
-              Logger.log "notify #{user} with #{event}"
-              channel.send event
-              Logger.log "notified #{user} with #{event}"
-            end
+      iterator.add Event.from_payload payload
+      while event = iterator.next
+        Logger.log "consuming event #{event}"
+        event.execute
+        users.each do |user, channel|
+          Logger.log "try notifying #{user} with #{event}"
+          if event.notify_user? user
+            Logger.log "notify #{user} with #{event}"
+            channel.send event
           end
         end
-        self.sequence = queue.last.sequence
-        queue.clear
-      # end
-    rescue
-      puts "error notiying: #{$!}"
+      end
     end
 
     class UserEndpoint < GServer
@@ -72,10 +52,6 @@ module Maze
         @server = server
       end
 
-      def log message
-        Logger.log message
-      end
-
       def serve io
         user = io.readline.chomp
         Logger.log "received user with ID: #{user}"
@@ -83,7 +59,7 @@ module Maze
 
         until io.closed?
           Logger.log "managing user #{user}"
-          sleep 0.2
+          sleep 0.1
         end
       rescue
         Logger.log "error serving: #{$!}"
@@ -98,17 +74,13 @@ module Maze
         @server     = server
       end
 
-      def log message
-        Logger.log message
-      end
-
       def serve io
         while payload = io.readline.chomp
           Logger.log "received payload: #{payload}"
           server.notify payload
         end
       rescue
-        puts "error event serving: #{$!} #{$!.class}"
+        Logger.log "error event serving: #{$!} #{$!.class}"
       end
     end
   end

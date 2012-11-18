@@ -9,8 +9,8 @@ module Maze
     end
 
     def send event
-        io.write "#{event}\n"
-        io.flush
+      io.puts "#{event}"
+      io.flush
     end
   end
 end

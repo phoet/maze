@@ -12,6 +12,7 @@ require 'gserver'
 require 'set'
 
 require_relative 'maze/logger'
+require_relative 'maze/iterator'
 require_relative 'maze/event'
 require_relative 'maze/relation'
 require_relative 'maze/channel'

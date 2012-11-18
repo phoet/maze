@@ -4,12 +4,12 @@ module Maze
   describe Server do
     let(:channel) { Channel.new FakeIO.new }
     let(:receiving_user) { '1' }
+    let(:event_for_user_1) { "1|P|32|#{receiving_user}" }
     let(:server) do
       server = Server.new
       server.users[receiving_user] = channel
       server
     end
-    let(:event_for_user_1) { "1|P|32|#{receiving_user}" }
 
     context "notification" do
       it "notifies a user" do

@@ -28,7 +28,7 @@ module Maze
     end
 
     def self.event_classes
-      @@_event_classes ||= []
+      @event_classes ||= []
     end
 
     def self.from_payload payload
@@ -55,6 +55,7 @@ module Maze
     def notify_user? user
       false
     end
+
     def execute
       Relation.remove from, to
     end

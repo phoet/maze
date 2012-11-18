@@ -5,8 +5,7 @@ module Maze
     end
 
     def self.logger
-      # @logger ||= ::Logger.new log_filename
-      @logger ||= ::Logger.new STDOUT
+      @logger ||= ::Logger.new log_filename
     end
 
     def self.log_filename
