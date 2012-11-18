@@ -6,4 +6,11 @@ server = Maze::Server.new
 server.setup
 server.start
 
-sleep 1000
+trap("INT") do
+  puts "killing server"
+  exit
+end
+
+loop do
+  sleep 1
+end
