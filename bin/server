@@ -11,6 +11,11 @@ trap("INT") do
   exit
 end
 
+
+current_dir = File.dirname __FILE__
+pid_file = File.join current_dir, '../tmp/maze.pid'
+File.open(pid_file, 'w') { |file| file.write Process.pid }
+
 loop do
   sleep 1
 end
