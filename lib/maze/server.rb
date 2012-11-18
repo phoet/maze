@@ -75,6 +75,7 @@ module Maze
       end
 
       def serve io
+        sleep 0.1 # allow users to connect before events are received
         while payload = io.readline.chomp
           Logger.log "received payload: #{payload}"
           server.notify payload
