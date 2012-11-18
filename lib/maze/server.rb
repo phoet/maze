@@ -1,10 +1,9 @@
 module Maze
   class Server
-    attr_accessor :queue, :users
+    attr_accessor :users
     attr_reader :endpoints, :iterator
 
     def initialize
-      @queue      = []
       @users      = {}
       @endpoints  = []
       @iterator   = Iterator.new

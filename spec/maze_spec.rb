@@ -11,7 +11,6 @@ describe Maze do
     before do
       server.setup
       server.users.clear
-      server.queue.clear
       server.start
       sleep 0.1
     end
@@ -22,7 +21,7 @@ describe Maze do
     end
 
     it "emits payload queues it on the server" do
-      server.queue.should have(0).elements
+      server.iterator.sequence.should == 0
       event_source.emit_events
 
       sleep 1
