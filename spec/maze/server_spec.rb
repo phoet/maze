@@ -3,11 +3,11 @@ require 'spec_helper'
 module Maze
   describe Server do
     let(:channel) { Channel.new FakeIO.new }
-    let(:receiving_user) { '1' }
+    let(:receiving_user) { User.new '1' }
     let(:event_for_user_1) { "1|P|32|#{receiving_user}" }
     let(:server) do
       server = Server.new
-      server.users[receiving_user] = channel
+      server.connections[receiving_user] = channel
       server
     end
 

@@ -9,10 +9,12 @@ module Maze
     end
 
     def notify_user? user
-      !to.nil? && user == to
+      # implement me
     end
 
-    def execute; end
+    def execute users
+      # implement me
+    end
 
     def sequence
       timestamp.to_i
@@ -46,8 +48,14 @@ module Maze
   end
 
   class Follow < Event
-    def execute
-      Relation.add from, to
+    def notify_user? user
+      user.id == to
+    end
+
+    def execute users
+      users.each do |user|
+        user.add_follower to if user.id == from
+      end
     end
   end
 
@@ -56,16 +64,22 @@ module Maze
       false
     end
 
-    def execute
-      Relation.remove from, to
+    def execute users
+      users.each do |user|
+        user.remove_follower to if user.id == from
+      end
     end
   end
 
   class StatusUpdate < Event
     def notify_user? user
-      Relation.subscribers(from).include? user
+      user.has_follower? from
     end
   end
 
-  class PrivateMsg < Event; end
+  class PrivateMsg < Event
+    def notify_user? user
+      user.id == to
+    end
+  end
 end

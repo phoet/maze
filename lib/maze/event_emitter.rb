@@ -7,13 +7,13 @@ module Maze
       @delay = options[:delay].to_i
     end
 
-    def emit_events(type = 'F')
+    def emit_events
       TCPSocket.open DEFAULT_HOST, EVENT_SOURCE_PORT do |socket|
         count.times do |i|
-          socket.print "#{i + 1}|#{type}|60|#{i}\n"
+          socket.puts "#{i + 1}|B"
           socket.flush
           if delay > 0
-            sleep(delay)
+            sleep delay
           end
         end
       end
