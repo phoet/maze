@@ -4,15 +4,15 @@ module Maze
   describe Iterator do
     context "next" do
       let(:iterator) { Iterator.new }
-      let(:e_1) { Event.from_payload '1|B' }
+      let(:event) { Event.from_payload '1|B' }
 
       it "has nothing when empty" do
         iterator.next.should be_nil
       end
 
       it "has a next when set" do
-        iterator.add e_1
-        iterator.next.should be e_1
+        iterator.add event
+        iterator.next.should be event
       end
 
       it "handles a sequence of events" do

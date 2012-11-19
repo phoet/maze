@@ -16,14 +16,15 @@ module Maze
     end
 
     context "notification" do
-      let(:any_user) { User.new '-1' }
-      let(:receiving_user) { User.new '1' }
-      let(:sending_user) { User.new '2' }
+      let(:any_user)        { User.new '-1' }
+      let(:receiving_user)  { User.new '1' }
+      let(:sending_user)    { User.new '2' }
+
       let(:private_message_for_1) { PrivateMsg.new('666', 'P', sending_user.id, receiving_user.id) }
-      let(:follow_for_1) { Follow.new('666', 'F', sending_user.id, receiving_user.id) }
-      let(:unfollow_for_1) { Unfollow.new('666', 'U', sending_user.id, receiving_user.id) }
-      let(:status_update_of_1) { StatusUpdate.new('666', 'S', sending_user.id) }
-      let(:broadcast) { Broadcast.new('666', 'B') }
+      let(:follow_for_1)          { Follow.new('666', 'F', sending_user.id, receiving_user.id) }
+      let(:unfollow_for_1)        { Unfollow.new('666', 'U', sending_user.id, receiving_user.id) }
+      let(:status_update_of_1)    { StatusUpdate.new('666', 'S', sending_user.id) }
+      let(:broadcast)             { Broadcast.new('666', 'B') }
 
       it "allows notification for private messages" do
         private_message_for_1.notify_user?(receiving_user).should be_true
@@ -55,17 +56,6 @@ module Maze
       context "regression testing" do
         let(:payloads) do
           [
-            '305|B',
-            '306|S|46',
-            '307|B',
-            '308|S|46',
-            '309|S|46',
-            '310|S|46',
-            '311|F|46|17',
-            '312|S|46',
-            '313|S|46',
-            '314|U|46|68',
-            '315|B',
             '316|S|46',
             '317|F|46|68',
             '318|S|46',
@@ -82,6 +72,7 @@ module Maze
           ]
         end
         let(:user) { User.new '33' }
+
         it "handles a chunk of notifation data correctly" do
           result = payloads.map do |payload|
             event = Event.from_payload payload
@@ -98,6 +89,7 @@ module Maze
       let(:any_user) { User.new '1' }
       let(:follower) { User.new '2' }
       let(:users)    { [any_user, follower] }
+
       let(:follow)   { Follow.new '1', 'F', any_user.to_s, follower.to_s }
       let(:status)   { StatusUpdate.new '2', 'S', follower.to_s }
       let(:unfollow) { Unfollow.new '3', 'U', any_user.to_s, follower.to_s }

@@ -15,7 +15,7 @@ module Maze
       it "notifies a user" do
         channel.io.messages.should be_empty
         server.notify event_for_user_1
-        channel.io.messages.should have(1).elements
+        channel.io.should have(1).messages
       end
     end
   end

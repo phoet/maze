@@ -1,10 +1,7 @@
-require 'spec_helper'
-
 module Maze
   describe User do
-    let(:user_id) { '1' }
     let(:follower_id) { '2' }
-    let(:user) { User.new user_id }
+    let(:user) { User.new '1' }
 
     it "adds subscriptions" do
       user.add_follower follower_id
