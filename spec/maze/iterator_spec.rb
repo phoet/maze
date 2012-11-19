@@ -44,7 +44,7 @@ module Maze
         iterator.next.should be_nil
       end
 
-      it "handles random of events" do
+      it "handles random event order" do
         events = 10.times.map { |i| Event.from_payload "#{i + 1}|B" }.shuffle
         events.each do |event|
           iterator.add event
