@@ -11,7 +11,7 @@ desc 'asserting that the example runs'
 task :assert do
   10.times do
     begin
-      sh 'rm tmp/*.*'
+      `rm tmp/*.*`
       sh 'bin/server &'
       sh 'bin/followermaze.sh > tmp/example.out 2>&1'
       sh 'grep "ALL NOTIFICATIONS RECEIVED" tmp/example.out | wc -l | xargs test "1" ='
