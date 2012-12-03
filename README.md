@@ -1,6 +1,6 @@
 # Follower-Maze Coding Challenge
 
-This is my implementation of the SoundCloud Coding Challenge (CHALLENGE.md).
+This is my (failed) implementation of the SoundCloud Coding Challenge (CHALLENGE.md).
 
 If you want to follow my naive approach to it, you can step through the branches
 that I created for implementing each part of the event notification system:
