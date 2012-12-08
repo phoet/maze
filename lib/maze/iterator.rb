@@ -3,8 +3,7 @@ module Maze
     attr_accessor :events, :sequence
 
     def initialize
-      @events = []
-      @sequence = 0
+      reset
     end
 
     def add event
@@ -20,6 +19,11 @@ module Maze
         events.delete event
         event
       end
+    end
+
+    def reset
+      @events   = []
+      @sequence = 0
     end
   end
 end

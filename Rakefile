@@ -9,7 +9,8 @@ task default: :spec
 
 desc 'asserting that the example runs'
 task :assert do
-  10.times do
+  probe = 3
+  probe.times do
     begin
       `rm tmp/*.*`
       sh 'bin/server &'
@@ -19,4 +20,8 @@ task :assert do
       sh 'cat tmp/maze.pid | xargs kill -9'
     end
   end
+  out = "#{probe} times got 'ALL NOTIFICATIONS RECEIVED'"
+  puts '*' * out.size
+  puts out
+  puts '*' * out.size
 end

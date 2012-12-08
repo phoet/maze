@@ -1,10 +1,9 @@
 module Maze
   class EventSource
-    attr_reader :count, :delay
+    attr_reader :count
 
-    def initialize options = { count: 1000, delay: 0 }
+    def initialize options = { count: 1000 }
       @count = options[:count].to_i
-      @delay = options[:delay].to_i
     end
 
     def emit_events
@@ -12,9 +11,6 @@ module Maze
         count.times do |i|
           socket.puts "#{i + 1}|B"
           socket.flush
-          if delay > 0
-            sleep delay
-          end
         end
       end
     end

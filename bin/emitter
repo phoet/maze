@@ -3,6 +3,5 @@
 require_relative '../lib/maze'
 
 count  = (ARGV[0] || 100).to_i
-delay  = (ARGV[1] || 0.1).to_i
-source = Maze::EventSource.new count: count, delay: delay
+source = Maze::EventSource.new count: count
 source.emit_events

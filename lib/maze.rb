@@ -4,6 +4,7 @@ module Maze
   DEFAULT_HOST      = 'localhost'
   EVENT_SOURCE_PORT = 9090
   USER_CLIENT_PORT  = 9099
+  MAX_CONNECTIONS   = 1000
 end
 
 require 'logger'

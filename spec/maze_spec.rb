@@ -5,37 +5,27 @@ module Maze
       let(:client) { Client.new '1' }
 
       let(:count) { 3 }
-      let(:event_source_options) { { count: count, delay: 0 } }
+      let(:event_source_options) { { count: count } }
       let(:event_source) { EventSource.new event_source_options }
 
       before do
         server.setup
         server.start
-        sleep 0.1
       end
 
       after do
         server.stop
-        sleep 0.1
-      end
-
-      it "emits payload queues it on the server" do
-        server.iterator.sequence.should == 0
-        event_source.emit_events
-
-        sleep 1
-        server.stop
-        server.iterator.sequence.should == 3
       end
 
       it "notifies a connected user" do
         Thread.new do
-          client.communicate do
-            event_source.emit_events
-          end
+          client.communicate
+        end
+        Thread.new do
+          event_source.emit_events
         end
 
-        sleep 1
+        sleep 0.1
         client.should have(count).events
       end
     end

@@ -9,18 +9,16 @@ module Maze
 
     def communicate
       Logger.log "starting communication for #{id}"
-
       TCPSocket.open DEFAULT_HOST, USER_CLIENT_PORT do |socket|
-        socket.print "#{id}\n" # say hello
-
-        yield if block_given?
-
-        while payload = socket.readline.chomp
+        socket.print "#{id}\n"
+        loop do
+          payload = socket.readline.chomp
           Logger.log "received event payload: #{payload}"
           events << Event.from_payload(payload)
-          sleep 0.1
         end
       end
+    rescue EOFError
+      Logger.log "closed communication for #{id}"
     end
   end
 end
