@@ -4,7 +4,7 @@ module Maze
       let(:server) { Server.new }
       let(:client) { Client.new '1' }
 
-      let(:count) { 3 }
+      let(:count) { 1 }
       let(:event_source_options) { { count: count } }
       let(:event_source) { EventSource.new event_source_options }
 

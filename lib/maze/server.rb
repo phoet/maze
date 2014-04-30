@@ -34,7 +34,9 @@ module Maze
         event.execute connections.keys
         connections.each do |user, channel|
           Logger.log "try notifying #{user} with #{event}"
-          if event.notify_user? user
+          if channel.closed?
+            Logger.log "closed channel, should be cleaned up"
+          elsif event.notify_user? user
             Logger.log "notify #{user} with #{event}"
             channel.send event
           end

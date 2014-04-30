@@ -10,4 +10,6 @@ class FakeIO
   end
 
   def flush; end
+
+  def closed?; end
 end

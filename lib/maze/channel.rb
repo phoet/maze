@@ -12,5 +12,9 @@ module Maze
       io.puts "#{event}"
       io.flush
     end
+
+    def closed?
+      io.closed?
+    end
   end
 end
