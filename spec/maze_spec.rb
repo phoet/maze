@@ -25,7 +25,7 @@ module Maze
           event_source.emit_events
         end
 
-        sleep 0.1
+        sleep 0.2
         client.should have(count).events
       end
     end
